@@ -1,13 +1,11 @@
 var Lexer = require('./src/lexer.js');
-var Token = require('./src/token.js');
 
 var constants = ['pi'];
 var functions = ['sin', 'cos', 'tan'];
 
 var lexer = new Lexer(constants, functions);
 
-var tokens = lexer.tokenize('10*((2+4)*3)');
-
+var tokens = lexer.tokenize('(3 + 2) (5 + 4)');
 
 var rpn = toRpn(tokens);
 console.log(rpn.map((i) => { return i.value; }));
@@ -23,13 +21,14 @@ function toRpn(tokens) {
     while(tokens.length) {
         var token = tokens.shift();
 
-        if(token.type === 'operator') {
+        if(token.definition.type === 'operator') {
             if(token.value === '(') {
                 output = output.concat(toRpn(tokens));
             } else if (token.value === ')') {
                 break;
             } else {
-                if(stack.length > 0 && stack[0].precedence > token.precedence) {
+               
+                if(stack.length > 0 && stack[0].definition.precedence > token.definition.precedence) {
                     output.push(stack.shift());
                 }
 
@@ -51,21 +50,23 @@ function solveRpn(tokens) {
 
         var token = tokens.shift();
 
-        if(token.type !== 'operator') {
+        if(token.definition.type !== 'operator') {
             stack.push(token);
         } else {
             if(stack.length >= 2) {
 
                 var opA = stack.pop();
                 var opB = stack.pop();
-                var t = new Token(token.fn(opB.value, opA.value));
-               
-                stack.push(t);
+            
+                var result = lexer.createToken(token.evaluate(opB.value, opA.value));
+                stack = stack.concat(result);
+                
 
             } else {
                 throw("Invalid expression");
             }
         }
     }
+
     return stack;
 }
