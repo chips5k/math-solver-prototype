@@ -1,16 +1,18 @@
+var TokenFactory = require('./src/token-factory.js');
 var Lexer = require('./src/lexer.js');
 var Parser = require('./src/parser.js');
-var constants = ['pi'];
-var functions = ['sin', 'cos', 'tan'];
+var Solver = require('./src/solver.js');
 
-var lexer = new Lexer(constants, functions);
-var parser = new Parser(lexer);
+var tokenFactory = new TokenFactory()
+var lexer = new Lexer(tokenFactory);
+var parser = new Parser(tokenFactory);
+var solver = new Solver(tokenFactory);
 
 var tokens = lexer.tokenize('(3 + 2) (5 + 4)');
 
 var rpn = parser.toRpn(tokens);
 console.log(rpn.map((i) => { return i.value; }));
 
-var solve = parser.solveRpn(rpn);
+var solve = solver.solveRpn(rpn);
 console.log(solve.map((i) => { return i.value; }));
 

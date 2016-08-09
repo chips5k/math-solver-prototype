@@ -1,18 +1,20 @@
-function Parser(lexer) {
-    this.lexer = lexer;
+var TokenFactory = require('./token-factory');
+
+function Parser(tokenFactory) {
+    this.tokenFactory = tokenFactory;
 }
 
-Parser.prototype.toRpn = function(tokens) {
+Parser.prototype.toRpn = function(tokenArray) {
 
     var stack = [];
     var output = [];
 
-    while(tokens.length) {
-        var token = tokens.shift();
+    while(tokenArray.length) {
+        var token = tokenArray.shift();
 
         if(token.definition.type === 'operator') {
             if(token.value === '(') {
-                output = output.concat(this.toRpn(tokens));
+                output = output.concat(this.toRpn(tokenArray));
             } else if (token.value === ')') {
                 break;
             } else {
@@ -31,35 +33,13 @@ Parser.prototype.toRpn = function(tokens) {
     return output.concat(stack.reverse());
 }
 
-Parser.prototype.solveRpn = function(tokens) {
-    
-    var stack = [];
 
-    while(tokens.length) {
+Parser.prototype.toParseTree = function(rpnTokenArray) {
 
-        var token = tokens.shift();
-
-        if(token.definition.type !== 'operator') {
-            stack.push(token);
-        } else {
-            if(stack.length >= 2) {
-
-                var opA = stack.pop();
-                var opB = stack.pop();
-            
-                var result = this.lexer.createToken(token.evaluate(opB.value, opA.value));
-                stack = stack.concat(result);
-                
-
-            } else {
-                throw("Invalid expression");
-            }
-        }
-    }
-
-    return stack;
 }
 
+Parser.prototype.toString = function(parseTree) {
 
+}
 
 module.exports = Parser;
