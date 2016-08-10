@@ -5,13 +5,14 @@ function Solver(tokenFactory) {
 
 Solver.prototype.solveRpn = function(rpnTokenArray) {
     
+    rpnTokenArray = rpnTokenArray.slice(0);
     var stack = [];
 
     while(rpnTokenArray.length) {
 
         var token = rpnTokenArray.shift();
 
-        if(token.definition.type !== 'operator') {
+        if(token.definition.type !== TokenFactory.prototype.OPERATOR) {
             stack.push(token);
         } else {
             if(stack.length >= 2) {
