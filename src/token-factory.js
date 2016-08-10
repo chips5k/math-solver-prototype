@@ -7,13 +7,93 @@ function Token(value, definition) {
 }
 
 function TokenFactory(definitions) {
+    
     this.tokenDefinitions = {};
     
     //Operators
     this.tokenDefinitions[TokenFactory.prototype.OPERATOR] = {
-        '^': {
+         '^': {
             value: '^',
             precedence: 2,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: (a, b) => {
+                a = parseFloat(a);
+                b = parseFloat(b);
+                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
+                return Math.pow(a, b);
+            }
+        },
+        '/': {
+            value: '/',
+            precedence: 1,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: (a, b) => {
+                a = parseFloat(a);
+                b = parseFloat(b);
+                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
+                return a / b;
+            }
+        },
+        '*': {
+            value: '*',
+            precedence: 1,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: (a, b) => {
+                a = parseFloat(a);
+                b = parseFloat(b);
+                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
+                return a * b;
+            }
+        },
+        '-': {
+            value: '-',
+            precedence: 0,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: (a, b) => {
+                a = parseFloat(a);
+                b = parseFloat(b);
+                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
+                return a - b;
+            }
+        },
+        '+': {
+            value: '+',
+            precedence: 0,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: (a, b) => {
+                a = parseFloat(a);
+                b = parseFloat(b);
+                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
+                return a + b;
+            }
+        },
+        '=': {
+            value: '=',
+            precedence: 0,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: () => {
+                return this.value;
+            }
+        },
+        '(': {
+            value: '(',
+            precedence: 0,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: () => {
+                return this.value;
+            }
+        },
+        ')': {
+            value: ')',
+            precedence: 0,
+            type: TokenFactory.prototype.OPERATOR,
+            evaluator: () => {
+                return this.value;
+            }
+        },
+        ',': {
+            value: ',',
+            precedence: 0,
             type: TokenFactory.prototype.OPERATOR,
             evaluator: () => {
                 return this.value;
