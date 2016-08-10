@@ -5,7 +5,6 @@ function Solver(tokenFactory) {
 
 Solver.prototype.solveRpn = function(rpnTokenArray) {
     
-    rpnTokenArray = rpnTokenArray.slice(0);
     var stack = [];
 
     while(rpnTokenArray.length) {

@@ -6,8 +6,6 @@ function Parser(tokenFactory) {
 
 Parser.prototype.toRpn = function(tokenArray) {
 
-    tokenArray = tokenArray.slice(0);
-
     var stack = [];
     var output = [];
 
@@ -38,8 +36,6 @@ Parser.prototype.toRpn = function(tokenArray) {
 
 Parser.prototype.toParseTree = function(rpnTokenArray) {
 
-    rpnTokenArray = rpnTokenArray.slice(0);
-
     var stack = [];
 
     var currentNode =  new Node();
@@ -59,7 +55,6 @@ Parser.prototype.toParseTree = function(rpnTokenArray) {
             stack.push(token);
         }
     }
-
 
     return currentNode;
 }
