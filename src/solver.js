@@ -14,14 +14,18 @@ Solver.prototype.solveRpn = function(rpnTokenArray) {
         if(token.definition.type !== TokenFactory.prototype.OPERATOR) {
             stack.push(token);
         } else {
-            if(stack.length >= 2) {
+            if(stack.length > 1) {
 
                 var opA = stack.pop();
                 var opB = stack.pop();
-            
-                var result = this.tokenFactory.createToken(token.evaluate(opB.value, opA.value));
-                stack = stack.concat(result);
-                
+
+                if(opA.definition.type === 'number' && opB.definition.type === 'number') {
+                    
+                    var result = this.tokenFactory.createToken(token.evaluate(opB.value, opA.value));
+                    stack = stack.concat(result);
+                } else {
+                    stack.push(opB, opA, token);
+                }
 
             } else {
                 throw("Invalid expression");

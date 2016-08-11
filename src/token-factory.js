@@ -50,10 +50,10 @@ function TokenFactory(definitions) {
             precedence: 0,
             type: TokenFactory.prototype.OPERATOR,
             evaluator: (a, b) => {
-                a = parseFloat(a);
-                b = parseFloat(b);
-                if(isNaN(a) || isNaN(b)) { throw 'Incorrect argument types'; }
-                return a - b;
+                var tA = parseFloat(a);
+                var tB = parseFloat(b);
+                if(isNaN(tA) || isNaN(tB)) { throw 'Incorrect argument types: ' + a + ', ' + b; }
+                return tA - tB;
             }
         },
         '+': {

@@ -19,8 +19,9 @@ Parser.prototype.toRpn = function(tokenArray) {
                 break;
             } else {
                
-                if(stack.length > 0 && stack[0].definition.precedence > token.definition.precedence) {
-                    output.push(stack.shift());
+                if(stack.length > 0 && stack[0].definition.precedence >= token.definition.precedence) {
+                    output = output.concat(stack.reverse());
+                    stack.length = 0;
                 }
 
                 stack.push(token);

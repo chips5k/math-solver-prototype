@@ -9,7 +9,7 @@ var lexer = new Lexer(tokenFactory);
 var parser = new Parser(tokenFactory);
 var solver = new Solver(tokenFactory);
 
-var tokens = lexer.tokenize('3 + 2 - 5 * 5');
+var tokens = lexer.tokenize('3 + 2 * 4 - 53 * 5');
 console.log(tokens.map((i) => { return i.value; }));
 
 
@@ -21,5 +21,4 @@ console.log(solve.map((i) => { return i.value; }));
 
 var tree = parser.toParseTree(rpn);
 
-console.log(util.inspect(tree, true, null));
 
