@@ -45,11 +45,11 @@ Parser.prototype.toParseTree = function(rpnTokenArray) {
         var token = rpnTokenArray.shift();
         if(token.definition.type === TokenFactory.prototype.OPERATOR) {
             if(currentNode.left) {
-                currentNode = new Node(token.value, stack.pop().value, currentNode);
+                currentNode = new Node(token, stack.pop(), currentNode);
             } else {
-                currentNode.value = token.value;
-                currentNode.right = stack.pop().value;
-                currentNode.left = stack.pop().value;
+                currentNode.value = token;
+                currentNode.right = stack.pop();
+                currentNode.left = stack.pop();
             }
 
         } else {
@@ -62,6 +62,7 @@ Parser.prototype.toParseTree = function(rpnTokenArray) {
 
 Parser.prototype.toString = function(parseTree) {
 
+    
 }
 
 function Node(value, left, right) {
