@@ -53,27 +53,4 @@ Solver.prototype.solveNode = function(node) {
     
 }
 
-Solver.prototype.evaluateNode = function(node) {
-
-    if(node.left) {
-        if(node.left.constructor.name === 'Node') {
-            this.evaluateNode(node.left);
-        } else {
-            node.left = node.left.value;
-        }
-    }
-
-    if(node.right) {
-        if(node.right.constructor.name === 'Node') {
-            
-            this.evaluateNode(node.right);
-        } else {
-            
-            node.right = node.right.value;
-        }
-    }
-    
-    node.value = node.value.value;
-}
-
 module.exports = Solver;

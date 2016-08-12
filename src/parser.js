@@ -50,12 +50,16 @@ Parser.prototype.toParseTree = function(rpnTokenArray) {
             if(stack.length > 1) {
                 var b = stack.pop();
                 var a = stack.pop();
-                
+
                 currentNode = new Node(currentToken, a, b);
                 stack.push(currentNode);
             }
         }
     }    
+
+    if(stack.length > 1) {
+        throw('Stack not empty - unhandled condition');
+    }
 
     return currentNode;
 
