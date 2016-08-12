@@ -38,30 +38,52 @@ Parser.prototype.toRpn = function(tokenArray) {
 Parser.prototype.toParseTree = function(rpnTokenArray) {
 
     var stack = [];
-
-    var currentNode =  new Node();
+    var currentNode = null;
     while(rpnTokenArray.length) {
-        
-        var token = rpnTokenArray.shift();
-        if(token.definition.type === TokenFactory.prototype.OPERATOR) {
-            if(currentNode.left) {
-                currentNode = new Node(token, stack.pop(), currentNode);
-            } else {
-                currentNode.value = token;
-                currentNode.right = stack.pop();
-                currentNode.left = stack.pop();
-            }
 
+        var currentToken = rpnTokenArray.shift();
+
+        if(currentToken.definition.type !== TokenFactory.prototype.OPERATOR) {
+            stack.push(currentToken);
         } else {
-            stack.push(token);
+
+            if(stack.length > 1) {
+                var b = stack.pop();
+                var a = stack.pop();
+                
+                currentNode = new Node(currentToken, a, b);
+                stack.push(currentNode);
+            }
         }
-    }
+    }    
 
     return currentNode;
+
 }
 
-Parser.prototype.toString = function(parseTree) {
+Parser.prototype.toString = function(node) {
 
+    
+    var string = '';
+
+    if(node.left) {
+        string += '(';
+        string += this.toString(node.left);
+    }
+
+    if(node.constructor.name === 'Node') {
+        string += node.value.value;
+    } else if(node.constructor.name === 'Token') {
+        string += node.value;
+    }
+
+    if(node.right) {
+        string += this.toString(node.right);
+        string += ')';
+    }
+
+    return string;
+    
     
 }
 
