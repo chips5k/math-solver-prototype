@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Math Solver Prototype</title>
+    
+        <style>
+             @import url(https://fonts.googleapis.com/css?family=Roboto);
+            body {
+               font-family: 'Roboto', sans-serif;
+            }
+            
+           body * {
+               box-sizing: border-box;
+           }
+
+          
+
+         </style>
+    </head>
+
+    <body>
+
+        <h2>Tree Renderer</h2>
+
+        <canvas width="1640" height="1480" id="viewport" style="border:1px solid #ccc;"></canvas>
+            
+
+        <script src="jspm_packages/system.js"></script>
+        <script src="config.js"></script>
+        <script>
+            System.import('./src/index.js');
+
+            var canvas = document.getElementById('viewport');
+            var ctx = canvas.getContext('2d');
+           
+           
+            function PositionableNode(value, left, right, x, y) {
+                this.value = value;
+                this.x = x;
+                this.y = y;
+                this.w = 30;
+                this.h = 40;
+                this.left = left;
+                this.right = right;
+            }
+
+
+            function NodePositioner(x, y) {
+                this.y = y;
+                this.x = x;
+                this.minX = 0;
+                this.maxX = 0;
+            }
+
+            NodePositioner.prototype.position = function(node) {
+                
+                this.y += node.h;
+                
+                if(this.x <= this.maxX) {
+                    this.x = this.maxX + node.w * 2;
+                }
+
+                if(node.left) {
+                    this.x -= node.w;
+                    this.position(node.left);
+                    this.y -= node.h;
+                    this.x += node.w;
+                    
+                }
+
+                if(node.right) {
+                    this.x += node.w;
+                    this.position(node.right);
+                    this.y -= node.h;
+                    this.x -= node.w;
+                }
+                
+                node.y = this.y;
+               
+                node.x = this.x;
+                
+                if(node.right && node.left) {
+                    node.x = node.left.x + (node.right.x - node.left.x) / 2;
+                }
+
+                if(this.x < this.minX) {
+                    this.minX = this.x;
+                }
+
+                if(this.x > this.maxX) {
+                    this.maxX = this.x;
+                }
+                
+                
+            };
+
+            function NodeRenderer(ctx) {
+                this.ctx = ctx;
+            }
+            
+            NodeRenderer.prototype.render = function(node) {
+
+                    
+                if(node.left) {
+                    this.render(node.left);
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(node.left.x, node.left.y);
+                    ctx.stroke();
+                }
+
+                if(node.right) {
+                   this.render(node.right);
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(node.right.x, node.right.y);
+                    ctx.stroke();
+                }
+
+                ctx.beginPath();
+                ctx.arc(node.x,node.y,node.w/2,0,2*Math.PI);
+                ctx.fillStyle = "#CCCCCC";
+                ctx.fill();
+                ctx.stroke();
+                ctx.font = "12px Arial";
+                ctx.strokeText(node.value,node.x - 3,node.y + 5);
+
+            };
+
+
+             var n = new PositionableNode('*', 
+                new PositionableNode('/', 
+                    new PositionableNode('+', 
+                        new PositionableNode('1'), 
+                        new PositionableNode('x',
+                            new PositionableNode('55.5'), 
+                            new PositionableNode('3',
+                            new PositionableNode('55.5'), 
+                        new PositionableNode('3',
+                        new PositionableNode('55.5'), 
+                        new PositionableNode('3',
+                        new PositionableNode('55.5',new PositionableNode('55.5'), 
+                        new PositionableNode('3',new PositionableNode('55.5'), 
+                        new PositionableNode('3'))), 
+                        new PositionableNode('3',
+                        new PositionableNode('55.5'), 
+                        new PositionableNode('3')))))
+                        )
+                    ), 
+                    new PositionableNode('-',
+                        new PositionableNode('0.5',
+                            new PositionableNode('55.5'), 
+                            new PositionableNode('3',
+                            new PositionableNode('55.5'), 
+                        new PositionableNode('3'))
+                        ), 
+                        new PositionableNode('3'))
+                ), 
+                new PositionableNode('-', 
+                    new PositionableNode('1',
+                        new PositionableNode('55.5',
+                        new PositionableNode('55.5',
+                        new PositionableNode('55.5'), 
+                        new PositionableNode('3')), 
+                        new PositionableNode('3',
+                        new PositionableNode('55.5',
+                        new PositionableNode('55.5',
+                        new PositionableNode('55.5'), 
+                        new PositionableNode('3')), 
+                        new PositionableNode('3')), 
+                        new PositionableNode('3'))
+                        ), 
+                        new PositionableNode('3')
+                    ), 
+                    new PositionableNode('x',
+                        new PositionableNode('55.5'), 
+                        new PositionableNode('3'))
+                )
+            );
+            
+            var nodePositioner = new NodePositioner(200, 80);
+            nodePositioner.position(n);
+
+            var nodeRenderer = new NodeRenderer(ctx); 
+            nodeRenderer.render(n);
+
+        </script>
+
+    </body>
+</html>

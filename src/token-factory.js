@@ -6,8 +6,9 @@ function Token(value, definition) {
     }
 }
 
-function TokenFactory(definitions) {
+function TokenFactory(definitions, container) {
     
+    this.container = container;
     this.tokenDefinitions = {};
     
     //Operators
@@ -219,7 +220,7 @@ TokenFactory.prototype.createToken = function(value) {
         }
     }
     
-    return new Token(value, definition);
+    return this.container.new('Token', { value: value, definition: definition });
 
 }
 
